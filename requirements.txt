@@ -2,3 +2,4 @@ keyboard
 pynput
 requests
 pywin32
+pyinstaller
